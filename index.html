@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Youth Accelerator — A Founder Network for the Next Generation</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#5bc8f5;
+  --blue-dim:#3a9abf;
+  --blue-glow:rgba(91,200,245,0.18);
+  --blue-soft:rgba(91,200,245,0.08);
+  --bg:#060a0f;
+  --bg2:#0a1018;
+  --bg3:#0d1520;
+  --fg:#e8f4fd;
+  --mu:#7a9ab5;
+  --di:#3a5570;
+  --bd:rgba(91,200,245,0.10);
+  --bd2:rgba(91,200,245,0.06);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden}
+
+/* Cursor glow only (no custom cursor dot/ring) */
+#cursor-glow{
+  position:fixed;pointer-events:none;z-index:9999;
+  width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle, rgba(91,200,245,0.09) 0%, rgba(91,200,245,0.04) 40%, transparent 70%);
+  transform:translate(-50%,-50%);
+  mix-blend-mode:screen;
+}
+
+canvas#cv{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:50;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;border-bottom:1px solid var(--bd2);background:rgba(6,10,15,.8);backdrop-filter:blur(20px)}
+.nav-logo{display:flex;align-items:center;gap:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--fg);text-decoration:none;letter-spacing:.02em;background:none;border:none;text-transform:uppercase;letter-spacing:.12em}
+.nav-logo-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--blue-dim));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#060a0f;font-family:'Syne',sans-serif}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{color:var(--mu);font-size:12px;font-weight:500;text-decoration:none;letter-spacing:.1em;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--blue)}
+.nav-right{display:flex;gap:10px;align-items:center}
+button{font-family:'DM Sans',sans-serif;}
+.bp{background:var(--blue);color:#060a0f;border:none;padding:10px 22px;border-radius:8px;font-weight:600;font-size:13px;transition:transform .2s,box-shadow .2s;letter-spacing:.02em}
+.bp:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(91,200,245,.3)}
+.bg{background:transparent;color:var(--fg);border:1px solid rgba(91,200,245,.2);padding:10px 20px;border-radius:8px;font-weight:400;font-size:13px;transition:all .2s}
+.bg:hover,.bg.on{border-color:var(--blue);color:var(--blue)}
+.sm{padding:7px 16px;font-size:12px}
+.page{display:none}.page.v{display:block}
+
+#ph{position:relative;z-index:5}
+.hero-wrap{padding:150px 40px 80px;max-width:960px;margin:0 auto}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:4px;border:1px solid var(--bd);font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--blue);margin-bottom:44px;background:var(--blue-soft)}
+.hero-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+h1.hero{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(54px,9vw,108px);line-height:.93;letter-spacing:-.02em;margin-bottom:32px;color:var(--fg)}
+h1.hero em{font-style:italic;color:var(--blue);font-weight:400}
+.hero-rule{width:48px;height:1px;background:linear-gradient(90deg,var(--blue),transparent);margin-bottom:28px}
+.hero-sub{font-size:15px;color:var(--mu);max-width:46ch;line-height:1.75;margin-bottom:48px;font-weight:300}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.hero-btn-primary{background:var(--blue);color:#060a0f;border:none;padding:15px 30px;border-radius:8px;font-weight:600;font-size:14px;font-family:'DM Sans',sans-serif;transition:transform .2s,box-shadow .2s;letter-spacing:.01em}
+.hero-btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(91,200,245,.3)}
+.hero-btn-ghost{background:transparent;color:var(--fg);border:1px solid rgba(91,200,245,.2);padding:15px 28px;border-radius:8px;font-weight:400;font-size:14px;font-family:'DM Sans',sans-serif;transition:all .2s}
+.hero-btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+
+/* wavy underline for "impact" */
+.wavy-impact{display:inline;position:relative;white-space:nowrap}
+.wavy-impact::after{
+  content:"";
+  position:absolute;
+  bottom:-4px;left:0;right:0;height:6px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='6'%3E%3Cpath d='M0 3 Q5 0 10 3 Q15 6 20 3 Q25 0 30 3 Q35 6 40 3' fill='none' stroke='%235bc8f5' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat:repeat-x;
+  background-size:40px 6px;
+  animation:wave-scroll 2.5s linear infinite;
+  opacity:.85;
+}
+@keyframes wave-scroll{from{background-position:0 0}to{background-position:40px 0}}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--bd2);max-width:960px;margin:0 auto;padding:0 40px 100px}
+.stat{padding:40px 20px 40px 0}.stat+.stat{border-left:1px solid var(--bd2);padding-left:32px}
+.stat-n{font-family:'DM Serif Display',serif;font-size:clamp(38px,5vw,60px);font-weight:400;color:var(--blue);line-height:1;margin-bottom:10px}
+.stat-l{font-size:11.5px;color:var(--di);line-height:1.55;font-weight:400;text-transform:uppercase;letter-spacing:.06em}
+
+.sec{padding:100px 40px;max-width:960px;margin:0 auto}
+.sec-tag{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+.sec-num{font-size:10px;font-weight:700;letter-spacing:.22em;color:var(--blue);font-family:'Syne',sans-serif}
+.sec-label{font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--di)}
+h2.sh{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(36px,6vw,68px);line-height:1.05;letter-spacing:-.02em;color:var(--fg)}
+h2.sh em{font-style:italic;color:var(--blue);font-weight:400}
+
+.pillars-header{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:48px}
+.pillars-desc{font-size:14px;color:var(--mu);line-height:1.75;max-width:40ch;font-weight:300}
+.pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd2)}
+.pillar{background:var(--bg2);padding:36px 28px;transition:background .3s}
+.pillar:hover{background:var(--bg3)}
+.pillar-n{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--blue);opacity:.6;margin-bottom:24px;letter-spacing:.2em}
+.pillar-title{font-size:14px;font-weight:600;color:var(--fg);margin-bottom:12px;letter-spacing:.02em;font-family:'Syne',sans-serif}
+.pillar-desc{font-size:13px;color:var(--mu);line-height:1.75;font-weight:300}
+
+.journey-body{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:48px}
+.journey-steps{display:flex;flex-direction:column}
+.jstep{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--bd2)}
+.jstep:first-child{border-top:1px solid var(--bd2)}
+.jstep-num{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;background:rgba(91,200,245,.08);color:var(--blue);transition:all .2s;font-family:'Syne',sans-serif;letter-spacing:.05em}
+.jstep.active .jstep-num{background:var(--blue);color:#060a0f;box-shadow:0 0 20px rgba(91,200,245,.35)}
+.jstep-label{font-size:14px;color:var(--mu);font-weight:400;transition:color .2s}
+.jstep.active .jstep-label{color:var(--fg);font-weight:500}
+.journey-card{background:var(--bg2);border:1px solid var(--bd);border-radius:16px;padding:36px;position:sticky;top:80px}
+.jcard-n{font-family:'DM Serif Display',serif;font-size:52px;font-weight:400;color:var(--blue);line-height:1;margin-bottom:16px;opacity:.5}
+.jcard-title{font-size:16px;font-weight:600;color:var(--fg);margin-bottom:12px;font-family:'Syne',sans-serif}
+.jcard-desc{font-size:13.5px;color:var(--mu);line-height:1.75;font-weight:300}
+
+.network-sec{padding:100px 40px;text-align:center;max-width:960px;margin:0 auto}
+.network-canvas-wrap{margin:60px auto 0;max-width:700px}
+.network-canvas-wrap canvas{width:100%;border-radius:16px;border:1px solid var(--bd2)}
+.testimonial{background:var(--bg2);border:1px solid var(--bd);border-radius:16px;padding:40px;max-width:700px;margin:32px auto 0;text-align:left}
+.testimonial-text{font-family:'DM Serif Display',serif;font-style:italic;font-size:clamp(16px,2.2vw,21px);font-weight:400;color:var(--fg);line-height:1.6;margin-bottom:20px}
+.testimonial-text em{color:var(--blue);font-style:italic}
+.testimonial-tag{font-size:11px;color:var(--di);letter-spacing:.12em;font-weight:600;text-transform:uppercase}
+
+.cta-sec{padding:80px 40px 120px;text-align:center;max-width:960px;margin:0 auto}
+.cta-sec h2{font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(36px,6vw,64px);line-height:1.05;letter-spacing:-.02em;color:var(--fg);margin-bottom:20px}
+.cta-sec h2 em{font-style:italic;color:var(--blue)}
+.cta-sec p{font-size:14px;color:var(--mu);max-width:46ch;margin:0 auto 36px;line-height:1.75;font-weight:300}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+footer{border-top:1px solid var(--bd2);padding:40px;max-width:960px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:5}
+.footer-logo{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:700;color:var(--fg);font-family:'Syne',sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.footer-sub{font-size:11.5px;color:var(--di);max-width:40ch;text-align:right;line-height:1.7;font-weight:300}
+
+.cw{position:relative;z-index:10;display:grid;place-items:center;min-height:calc(100vh - 60px);padding:24px;margin-top:60px}
+.card{background:linear-gradient(150deg,rgba(10,16,24,.99),rgba(6,10,15,.99));border:1px solid var(--bd);border-radius:20px;padding:40px;width:100%;max-width:600px}
+.aw{position:relative;z-index:10;max-width:860px;margin:60px auto 0;padding:48px 40px 100px}
+.lbl{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--di);font-weight:600;margin-bottom:8px;font-family:'Syne',sans-serif}
+input[type=text],input[type=email],input[type=password],input[type=url]{width:100%;background:rgba(91,200,245,.03);border:1px solid rgba(91,200,245,.12);color:var(--fg);padding:13px 16px;border-radius:8px;font-size:14.5px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s,background .2s}
+input:focus{border-color:var(--blue)!important;background:rgba(91,200,245,.05)!important}
+.g2{display:grid;gap:14px}
+.stag{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:12px;display:block;font-family:'Syne',sans-serif}
+h2.ch{font-family:'DM Serif Display',serif;font-weight:400;font-size:30px;margin-bottom:8px;color:var(--fg)}
+p.cs{color:var(--mu);font-size:14px;margin-bottom:22px;font-weight:300;line-height:1.65}
+.pb{display:flex;gap:5px;margin-bottom:24px}
+.ps{flex:1;height:2px;border-radius:2px;background:rgba(91,200,245,.08)}.ps.d{background:var(--blue)}
+.wt{display:inline-flex;align-items:center;padding:5px 12px;border-radius:6px;margin-bottom:14px;background:rgba(91,200,245,.08);border:1px solid rgba(91,200,245,.2);color:var(--blue);font-size:11px;font-weight:600;letter-spacing:.05em}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.chip{padding:8px 14px;border-radius:6px;font-size:12.5px;font-weight:500;font-family:'DM Sans',sans-serif;background:rgba(91,200,245,.04);color:var(--fg);border:1px solid rgba(91,200,245,.12);transition:all .15s}
+.chip.on{background:var(--blue);color:#060a0f;border-color:var(--blue)}
+.rc{text-align:left;padding:14px 18px;border-radius:10px;width:100%;background:rgba(91,200,245,.03);border:1px solid rgba(91,200,245,.10);color:var(--fg);font-family:'DM Sans',sans-serif;display:block;margin-bottom:8px;transition:all .2s}
+.rc.on{background:rgba(91,200,245,.07);border-color:rgba(91,200,245,.4)}
+.rct{font-weight:500;font-size:14px}.rcd{color:var(--mu);font-size:12.5px;margin-top:3px;font-weight:300}
+.fnav{display:flex;justify-content:space-between;align-items:center;margin-top:24px}
+.sc{color:var(--di);font-size:12.5px}
+.err{margin-top:14px;padding:11px 16px;border-radius:8px;background:rgba(255,80,80,.07);border:1px solid rgba(255,80,80,.25);color:#ff9090;font-size:13px;display:none}
+.err.show{display:block}
+.mc{border-radius:14px;padding:24px;margin-bottom:14px;border:1px solid rgba(91,200,245,.08);background:rgba(91,200,245,.02)}
+.mc.top{background:linear-gradient(135deg,rgba(91,200,245,.07),rgba(58,154,191,.04));border-color:rgba(91,200,245,.25)}
+.mtr{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.mn{font-family:'DM Serif Display',serif;font-size:22px;color:var(--fg);font-weight:400}
+.ms{color:var(--mu);font-size:12.5px;margin-top:3px}.mb2{color:var(--di);font-size:12px;margin-top:4px}
+.mpct{font-family:'DM Serif Display',serif;font-size:38px;color:var(--blue);line-height:1;text-align:right;font-weight:400}
+.topt{font-size:10px;color:var(--blue);font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-top:4px;text-align:right;font-family:'Syne',sans-serif}
+.sbars{display:grid;gap:7px;margin-top:4px}
+.srow{display:grid;grid-template-columns:90px 1fr 40px;align-items:center;gap:10px}
+.sl{font-size:11.5px;color:var(--di)}.bt{height:2px;border-radius:2px;background:rgba(91,200,245,.07);overflow:hidden}
+.bf{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-dim))}.sv{font-size:11.5px;color:var(--blue);text-align:right}
+.blurb{margin-top:16px;padding:16px;border-radius:10px;font-size:13.5px;line-height:1.65;background:rgba(91,200,245,.04);border:1px solid rgba(91,200,245,.15);color:var(--fg)}
+.bload{color:var(--di);font-size:12.5px;margin-top:12px}
+.bgen{background:transparent;color:var(--mu);border:1px solid rgba(91,200,245,.12);padding:7px 16px;border-radius:8px;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:none;margin-top:12px;transition:all .2s}
+.bgen:hover{border-color:var(--blue);color:var(--blue)}
+.pgrid{display:grid;gap:12px;margin-top:16px}
+.prow{display:grid;grid-template-columns:120px 1fr;gap:12px;font-size:13.5px}
+.pk{color:var(--di);text-transform:uppercase;font-size:10px;letter-spacing:.14em;padding-top:2px;font-weight:600;font-family:'Syne',sans-serif}
+.pv{color:var(--fg);font-weight:300}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.rise{animation:rise .9s both}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#1a2a3a;border-radius:2px}
+@media(max-width:680px){
+  .pillars-header,.journey-body{grid-template-columns:1fr}
+  .pillar-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat:nth-child(3){border-left:none;border-top:1px solid var(--bd2)}
+  nav,.hero-wrap,.sec,.stats,.network-sec,.cta-sec{padding-left:20px;padding-right:20px}
+  .card,.aw{padding:24px 18px}
+}
+</style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<canvas id="cv"></canvas>
+
+<nav>
+  <button class="nav-logo" onclick="goHome()"><div class="nav-logo-mark">YA</div>Youth Accelerator</button>
+  <div class="nav-links" id="nav-links">
+    <a href="#model">Model</a><a href="#journey">Journey</a><a href="#network">Network</a><a href="#apply">Apply</a>
+  </div>
+  <div class="nav-right" id="navr">
+    <button class="bg sm" onclick="showLogin()">Log in</button>
+    <button class="bp sm" onclick="showSignup()">Sign up</button>
+  </div>
+</nav>
+
+<div id="ph" class="page v">
+  <div class="hero-wrap rise">
+    <div class="hero-pill"><span class="hero-pill-dot"></span>A founder network for the next generation</div>
+    <h1 class="hero"><span class="wavy-impact">Transform ideas<br>into <em>impact.</em></span></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-sub">Talent isn't the bottleneck. Capital, mentorship, and a place to start are. Youth Accelerator connects young founders to all three — and to each other.</p>
+    <div class="hero-btns">
+      <button class="hero-btn-primary" onclick="document.getElementById('apply').scrollIntoView({behavior:'smooth'})">Apply as a founder &#8594;</button>
+      <button class="hero-btn-ghost" onclick="document.getElementById('network').scrollIntoView({behavior:'smooth'})">See the network</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n">3</div><div class="stat-l">Pillars: capital, people, support</div></div>
+    <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Reviewed on merit, not pedigree</div></div>
+    <div class="stat"><div class="stat-n">12+</div><div class="stat-l">Industries in the resource library</div></div>
+    <div class="stat"><div class="stat-n">1</div><div class="stat-l">Network that compounds over time</div></div>
+  </div>
+  <div style="border-top:1px solid var(--bd2);border-bottom:1px solid var(--bd2);padding:28px 40px;text-align:center;background:var(--bg2)">
+    <div style="font-size:10px;color:var(--di);letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px">Backed &amp; supported by</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:8px;opacity:0.55;filter:grayscale(1)">
+        <div style="width:28px;height:28px;background:linear-gradient(135deg,#6366f1,#4f46e5);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;font-family:'Syne',sans-serif">SE</div>
+        <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--fg);letter-spacing:.04em">SE Ventures</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;opacity:0.55;filter:grayscale(1)">
+        <div style="width:28px;height:28px;background:linear-gradient(135deg,#10b981,#059669);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;font-family:'Syne',sans-serif">OV</div>
+        <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--fg);letter-spacing:.04em">Overture Ventures</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;opacity:0.55;filter:grayscale(1)">
+        <div style="width:28px;height:28px;background:linear-gradient(135deg,#c8102e,#8c1515);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;font-family:'Syne',sans-serif">S</div>
+        <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--fg);letter-spacing:.04em">Stanford University</span>
+      </div>
+    </div>
+  </div>
+  <div class="sec" id="model">
+    <div class="sec-tag"><span class="sec-num">01</span><span class="sec-label">The model</span></div>
+    <div class="pillars-header">
+      <h2 class="sh">Three pillars, one <em>goal.</em></h2>
+      <p class="pillars-desc">We don't hand students a generic playbook and walk away. We provide the three things early founders most consistently lack.</p>
+    </div>
+    <div class="pillar-grid">
+      <div class="pillar"><div class="pillar-n">01 — FUNDING</div><div class="pillar-title">Funding</div><div class="pillar-desc">A modest R&amp;D grant is often all that stands between a prototype and a dead idea. We make sure cost isn't the reason a project never ships.</div></div>
+      <div class="pillar"><div class="pillar-n">02 — NETWORKING</div><div class="pillar-title">Networking</div><div class="pillar-desc">We match founders with experienced mentors and a network of operators, advisors, and clients — the connections capital alone can't buy.</div></div>
+      <div class="pillar"><div class="pillar-n">03 — INCUBATION</div><div class="pillar-title">Incubation</div><div class="pillar-desc">Help doesn't stop at a check and an intro. Founders draw on an ongoing library of resources for every stage of building.</div></div>
+    </div>
+  </div>
+  <div class="sec" id="journey">
+    <div class="sec-tag"><span class="sec-num">02</span><span class="sec-label">The journey</span></div>
+    <h2 class="sh">From a lone idea to a <em>node</em><br>in the network.</h2>
+    <div class="journey-body">
+      <div class="journey-steps">
+        <div class="jstep active" onclick="setJStep(0)"><div class="jstep-num">01</div><span class="jstep-label">Ambition</span></div>
+        <div class="jstep" onclick="setJStep(1)"><div class="jstep-num">02</div><span class="jstep-label">Support</span></div>
+        <div class="jstep" onclick="setJStep(2)"><div class="jstep-num">03</div><span class="jstep-label">Matching</span></div>
+        <div class="jstep" onclick="setJStep(3)"><div class="jstep-num">04</div><span class="jstep-label">Growth</span></div>
+        <div class="jstep" onclick="setJStep(4)"><div class="jstep-num">05</div><span class="jstep-label">Network</span></div>
+      </div>
+      <div class="journey-card">
+        <div class="jcard-n" id="jcard-n">01</div>
+        <div class="jcard-title" id="jcard-t">Ambition</div>
+        <div class="jcard-desc" id="jcard-d">A student arrives with an idea and the will to build it — but no capital, no network, no map.</div>
+      </div>
+    </div>
+  </div>
+  <div class="network-sec" id="network">
+    <div class="sec-tag" style="justify-content:center"><span class="sec-num">03</span><span class="sec-label">The network is the product</span></div>
+    <h2 class="sh" style="font-size:clamp(32px,5.5vw,60px)">Every founder we back<br>makes the <em>next</em> one stronger.</h2>
+    <p style="font-size:14px;color:var(--mu);max-width:46ch;margin:16px auto 0;line-height:1.75;font-weight:300">Hover any node. Founders, mentors, and the hub that ties them together — the value isn't a single match, it's the web that forms around it.</p>
+    <div class="network-canvas-wrap"><canvas id="nc" height="360"></canvas></div>
+    <div class="testimonial">
+      <div class="testimonial-text">"A student building 3D-printed scale models was matched with a technology lawyer who helped him navigate trademark protection and platform compliance — the kind of <em>quiet</em> guidance that decides whether a small venture survives."</div>
+      <div class="testimonial-tag">Founder&#8211;mentor match &middot; trademark &amp; compliance support</div>
+    </div>
+  </div>
+  <div class="sec" id="events" style="max-width:900px;margin:0 auto;padding:100px 40px">
+    <div class="sec-tag"><span class="sec-num">04</span><span class="sec-label">Events</span></div>
+    <h2 class="sh">Where founders <em>meet.</em></h2>
+    <p style="font-size:14px;color:var(--mu);max-width:46ch;margin:16px 0 48px;line-height:1.75;font-weight:300">We bring our network together in person — connecting founders, mentors, and operators across the world's most dynamic markets.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div style="background:var(--bg2);border:1px solid var(--bd);border-radius:16px;padding:32px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue-dim))"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+          <div style="background:var(--blue-soft);border:1px solid var(--bd);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;color:var(--blue);letter-spacing:.08em;text-transform:uppercase">August 2026</div>
+          <div style="background:rgba(91,200,245,0.12);border-radius:6px;padding:4px 10px;font-size:10px;color:var(--blue);font-weight:500;letter-spacing:.06em">Upcoming</div>
+        </div>
+        <div style="font-size:11px;color:var(--mu);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Manila, Philippines</div>
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--fg);margin-bottom:12px;line-height:1.2">Youth Accelerator<br>Manila Summit</div>
+        <p style="font-size:13px;color:var(--mu);line-height:1.7;margin-bottom:24px">A founder summit focused on emerging markets, financial inclusion, and underserved entrepreneurs across Southeast Asia. Bringing together builders, operators, and capital from across the region.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span style="background:var(--bg3);border:1px solid var(--bd2);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--mu)">Emerging Markets</span>
+          <span style="background:var(--bg3);border:1px solid var(--bd2);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--mu)">Fintech</span>
+          <span style="background:var(--bg3);border:1px solid var(--bd2);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--mu)">Southeast Asia</span>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--bd);border-radius:16px;padding:32px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#7a9ab5,var(--di))"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+          <div style="background:var(--bg3);border:1px solid var(--bd2);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;color:var(--mu);letter-spacing:.08em;text-transform:uppercase">Fall 2026</div>
+          <div style="background:var(--bg3);border:1px solid var(--bd2);border-radius:6px;padding:4px 10px;font-size:10px;color:var(--mu);font-weight:500;letter-spacing:.06em">Announced</div>
+        </div>
+        <div style="font-size:11px;color:var(--mu);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Stanford, California</div>
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--fg);margin-bottom:12px;line-height:1.2">Youth Accelerator<br>Stanford Showcase</div>
+        <p style="font-size:13px;color:var(--mu);line-height:1.7;margin-bottom:24px">A showcase and networking event at the heart of Silicon Valley — connecting our founder cohort with the Bay Area startup ecosystem, investors, and operators building at the frontier.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span style="background:var(--bg3);border:1px solid var(--bd2);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--mu)">Silicon Valley</span>
+          <span style="background:var(--bg3);border:1px solid var(--bd2);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--mu)">Venture</span>
+          <span style="background:var(--bg3);border:1px solid var(--bd2);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--mu)">Demo Day</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="apply" style="padding:100px 40px;max-width:1000px;margin:0 auto">
+    <div class="sec-tag" style="margin-bottom:16px"><span class="sec-num">05</span><span class="sec-label">Apply</span></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:48px">
+      <div>
+        <h2 class="sh" style="margin-bottom:12px">Apply for <em>Cohort One.</em></h2>
+        <p style="font-size:14px;color:var(--mu);max-width:44ch;line-height:1.75;font-weight:300">We're building something from scratch — and the first cohort sets the standard. Applications are reviewed personally. We don't care about pedigree. We care about drive.</p>
+      </div>
+      <div style="background:rgba(91,200,245,0.06);border:1px solid var(--bd);border-radius:12px;padding:20px 28px;text-align:center;flex-shrink:0">
+        <div style="font-size:10px;color:var(--blue);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Application Deadline</div>
+        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--fg)">August 31, 2026</div>
+        <div style="font-size:11px;color:var(--mu);margin-top:6px">Cohort One · Limited spots</div>
+        <div id="countdown" style="font-size:12px;color:var(--blue);margin-top:10px;font-weight:600"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:40px">
+      <button id="tab-founder" onclick="switchApplyTab('founder')" style="background:var(--blue);color:#060a0f;border:none;padding:10px 24px;border-radius:8px;font-weight:700;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;letter-spacing:.02em">Apply as a Founder</button>
+      <button id="tab-mentor" onclick="switchApplyTab('mentor')" style="background:transparent;color:var(--mu);border:1px solid var(--bd);padding:10px 24px;border-radius:8px;font-weight:500;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer">Become a Mentor</button>
+    </div>
+
+    <div id="form-founder">
+      <div id="founder-form-wrap">
+        <form action="https://formspree.io/f/xeewgeob" method="POST" onsubmit="handleFormSuccess(event,'founder-success','founder-form-wrap')" style="display:flex;flex-direction:column;gap:20px">
+          <input type="hidden" name="_subject" value="YA Cohort One — Founder Application"/>
+          <input type="hidden" name="application_type" value="founder"/>
+          <input type="hidden" name="_replyto" id="founder-replyto"/>
+          <div style="font-size:11px;color:var(--mu);letter-spacing:.08em;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid var(--bd2);margin-bottom:4px">About You</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Full Name *</span>
+              <input name="name" required placeholder="Alex Rivera" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Email *</span>
+              <input name="email" type="email" required placeholder="alex@school.edu" oninput="document.getElementById('founder-replyto').value=this.value" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+            </label>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Age *</span>
+              <input name="age" required placeholder="17" type="number" min="13" max="25" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">School / Institution *</span>
+              <input name="school" required placeholder="Your school or university" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+            </label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Location (City, Country) *</span>
+            <input name="location" required placeholder="San Francisco, USA" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+          </label>
+          <div style="font-size:11px;color:var(--mu);letter-spacing:.08em;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid var(--bd2);margin:8px 0 4px">Your Venture</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Venture / Project Name *</span>
+              <input name="venture_name" required placeholder="What's it called?" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Website / Demo (if any)</span>
+              <input name="url" placeholder="https://..." style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+            </label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Describe your venture in 1-2 sentences *</span>
+            <textarea name="description" required rows="2" placeholder="What are you building, who is it for, and what problem does it solve?" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Stage *</span>
+              <select name="stage" required style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+                <option value="" disabled selected>Select stage</option>
+                <option>Idea — concept only, not yet built</option>
+                <option>Prototype — early version exists</option>
+                <option>Launched — live with early users</option>
+                <option>Revenue — generating income</option>
+              </select>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Industry / Sector *</span>
+              <select name="sector" required style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+                <option value="" disabled selected>Select sector</option>
+                <option>Fintech / Financial Inclusion</option>
+                <option>EdTech</option>
+                <option>Climate / Sustainability</option>
+                <option>Healthcare</option>
+                <option>AI / Software</option>
+                <option>Hardware / Deep Tech</option>
+                <option>Social Impact</option>
+                <option>Consumer</option>
+                <option>Other</option>
+              </select>
+            </label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Who are your co-founders, if any? What do they bring?</span>
+            <textarea name="cofounders" rows="2" placeholder="Name, role, and background. Leave blank if solo." style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">What is the core problem you're solving, and why does it matter? *</span>
+            <textarea name="problem" required rows="3" placeholder="Be specific. Who suffers from this problem, and how are they solving it today?" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <div style="font-size:11px;color:var(--mu);letter-spacing:.08em;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid var(--bd2);margin:8px 0 4px">Traction &amp; Progress</div>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">What have you built or done so far? *</span>
+            <textarea name="progress" required rows="3" placeholder="Prototypes, users, revenue, research, partnerships — anything real. If nothing yet, say so and explain what's stopped you." style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Have you raised any funding? If so, from whom and how much?</span>
+            <input name="funding" placeholder="e.g. $5k from friends/family, or None" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+          </label>
+          <div style="font-size:11px;color:var(--mu);letter-spacing:.08em;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid var(--bd2);margin:8px 0 4px">Fit &amp; Motivation</div>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">What do you need most right now — and why can't you get it on your own? *</span>
+            <textarea name="need" required rows="3" placeholder="Be honest. Is it capital, introductions, technical help, accountability? Why is this the bottleneck?" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Why are you the right person to build this? *</span>
+            <textarea name="why_you" required rows="3" placeholder="What's your unfair advantage — experience, insight, network, obsession with the problem?" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Where do you want this to be in 2 years? *</span>
+            <textarea name="vision" required rows="2" placeholder="Specific is better than ambitious-sounding." style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Anything else you want us to know?</span>
+            <textarea name="other" rows="2" placeholder="Optional." style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:8px">
+            <p style="font-size:12px;color:var(--di);line-height:1.6;max-width:40ch">We review every application personally and respond within 2 weeks. Cohort One is limited — apply before August 31.</p>
+            <button type="submit" class="bp" style="padding:14px 32px;font-size:14px;border-radius:10px;white-space:nowrap">Submit application &#8594;</button>
+          </div>
+        </form>
+      </div>
+      <div id="founder-success" style="display:none;text-align:center;padding:64px 0">
+        <div style="font-size:40px;margin-bottom:20px;color:var(--blue)">✓</div>
+        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--fg);margin-bottom:12px">Application received.</div>
+        <p style="font-size:14px;color:var(--mu);line-height:1.8;max-width:38ch;margin:0 auto">We review every application personally. You'll hear back within two weeks. In the meantime — keep building.</p>
+      </div>
+    </div>
+
+    <div id="form-mentor" style="display:none">
+      <div id="mentor-form-wrap">
+        <p style="font-size:14px;color:var(--mu);line-height:1.75;margin-bottom:32px;max-width:50ch">Mentors are operators, founders, investors, and domain experts who give a founder what money can't buy: real experience, honest feedback, and the right introduction at the right time.</p>
+        <form action="https://formspree.io/f/xeewgeob" method="POST" onsubmit="handleFormSuccess(event,'mentor-success','mentor-form-wrap')" style="display:flex;flex-direction:column;gap:20px">
+          <input type="hidden" name="_subject" value="YA Cohort One — Mentor Application"/>
+          <input type="hidden" name="application_type" value="mentor"/>
+          <input type="hidden" name="_replyto" id="mentor-replyto"/>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Full Name *</span>
+              <input name="name" required placeholder="Jordan Kim" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Email *</span>
+              <input name="email" type="email" required placeholder="jordan@company.com" oninput="document.getElementById('mentor-replyto').value=this.value" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+            </label>
+          </div>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Current Role &amp; Organization *</span>
+            <input name="role" required placeholder="Partner at Acme Ventures / CEO of Acme Corp" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">LinkedIn Profile *</span>
+            <input name="linkedin" required placeholder="https://linkedin.com/in/..." style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"/>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Areas of expertise *</span>
+            <textarea name="expertise" required rows="2" placeholder="e.g. B2B SaaS go-to-market, fundraising, product development, fintech regulation..." style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">What kind of founder do you most want to work with? *</span>
+            <textarea name="ideal_founder" required rows="3" placeholder="Stage, sector, geography, personality — be specific about where you add the most value." style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Time commitment *</span>
+            <select name="time" required style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+              <option value="" disabled selected>How much time can you give?</option>
+              <option>1-2 hours/month — occasional check-ins</option>
+              <option>3-5 hours/month — regular touchpoints</option>
+              <option>5+ hours/month — hands-on involvement</option>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;color:var(--mu);letter-spacing:.06em;text-transform:uppercase">Why do you want to mentor young founders? *</span>
+            <textarea name="why" required rows="3" placeholder="What drives you to give time to early-stage builders?" style="background:var(--bg2);border:1px solid var(--bd);border-radius:8px;padding:11px 14px;color:var(--fg);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--bd)'"></textarea>
+          </label>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:8px">
+            <p style="font-size:12px;color:var(--di);line-height:1.6;max-width:40ch">Mentor applications are reviewed on a rolling basis. We'll reach out to schedule a brief intro call.</p>
+            <button type="submit" class="bp" style="padding:14px 32px;font-size:14px;border-radius:10px;white-space:nowrap">Submit application &#8594;</button>
+          </div>
+        </form>
+      </div>
+      <div id="mentor-success" style="display:none;text-align:center;padding:64px 0">
+        <div style="font-size:40px;margin-bottom:20px;color:var(--blue)">✓</div>
+        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--fg);margin-bottom:12px">We'll be in touch.</div>
+        <p style="font-size:14px;color:var(--mu);line-height:1.8;max-width:38ch;margin:0 auto">Thanks for your interest in mentoring. We'll review your application and reach out to schedule an intro call.</p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-logo"><div class="nav-logo-mark" style="width:22px;height:22px;font-size:9px">YA</div>Youth Accelerator</div>
+    <div class="footer-sub">A student-founded initiative connecting the next generation of founders to capital, mentorship, and a network that compounds.</div>
+  </footer>
+</div>
+
+<div id="pl" class="page">
+  <div class="cw"><div class="card">
+    <h2 class="ch">Welcome back.</h2>
+    <p class="cs">Log in to view your profile and matches.</p>
+    <div class="g2">
+      <label><span class="lbl">Email</span><input type="email" id="le" placeholder="alex@school.edu"/></label>
+      <label><span class="lbl">Password</span><input type="password" id="lp" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()"/></label>
+    </div>
+    <div class="err" id="lerr"></div>
+    <div class="fnav">
+      <button class="bg" onclick="showSignup()">Sign up instead</button>
+      <button class="bp" id="lbtn" onclick="doLogin()">Log in &#8594;</button>
+    </div>
+  </div></div>
+</div>
+
+<div id="ps" class="page">
+  <div class="cw"><div class="card" id="sc"></div></div>
+</div>
+
+<div id="pa" class="page">
+  <div class="aw" id="ac"></div>
+</div>
+
+<script>
+/* ─── CURSOR GLOW ─── */
+(function(){
+  var glow=document.getElementById("cursor-glow");
+  var mx=window.innerWidth/2,my=window.innerHeight/2;
+  var t=0;
+
+  document.addEventListener("mousemove",function(e){mx=e.clientX;my=e.clientY;});
+
+  function animGlow(){
+    t+=0.03;
+    var scale=1+Math.sin(t)*0.12+Math.cos(t*0.7)*0.06;
+    var sz=Math.round(320*scale);
+    glow.style.width=sz+"px";
+    glow.style.height=sz+"px";
+    glow.style.transform="translate("+(mx-sz/2)+"px,"+(my-sz/2)+"px)";
+    requestAnimationFrame(animGlow);
+  }
+  animGlow();
+})();
+
+/* ─── STORAGE ─── */
+var _useWS = (typeof window.storage !== "undefined" && window.storage !== null);
+function stGet(key, shared) {
+  if (_useWS) return window.storage.get(key, shared).then(function(r){ return r ? r.value : null; }).catch(function(){ return null; });
+  return Promise.resolve(localStorage.getItem(key));
+}
+function stSet(key, val, shared) {
+  if (_useWS) return window.storage.set(key, val, shared).catch(function(){});
+  try { localStorage.setItem(key, val); } catch(e){}
+  return Promise.resolve();
+}
+function stDel(key, shared) {
+  if (_useWS) return window.storage.delete(key, shared).catch(function(){});
+  localStorage.removeItem(key);
+  return Promise.resolve();
+}
+
+/* ─── DATA ─── */
+var SECTORS=["Biotech & Health","Software & AI","Hardware & Robotics","Climate & Energy","Finance & Fintech","Consumer & E-commerce","Media & Creator Tools","Education","Social Impact","Other"];
+var FGOALS=["Product / MVP development","Finding a co-founder or team","Fundraising & investors","Legal / IP / compliance","Go-to-market & growth","Pricing & business model","Hiring & operations","Pitching & storytelling","Technical mentorship","General strategy & advice"];
+var MSTR=["Early-stage strategy","Technical / engineering","Fundraising & VC introductions","Legal / IP / compliance","Go-to-market & distribution","Pricing & business models","Hiring & team building","Pitch coaching & storytelling","Product & design feedback","Network & industry connections"];
+var AVAIL=[{id:"low",lb:"Light",ds:"~1 hr / month"},{id:"med",lb:"Steady",ds:"~1 hr / 2 weeks"},{id:"high",lb:"Hands-on",ds:"1+ hrs / week"}];
+var STAGES=[{id:"idea",lb:"Just an idea",n:0},{id:"proto",lb:"Prototype / building",n:1},{id:"launch",lb:"Launched, early users",n:2},{id:"scale",lb:"Scaling / revenue",n:3}];
+var XP=[{id:"early",lb:"0-2 years",ds:"Fresh in the industry"},{id:"mid",lb:"3-7 years",ds:"Solid practitioner"},{id:"senior",lb:"8-15 years",ds:"Deep expertise"},{id:"exec",lb:"15+ years",ds:"Executive / founder"}];
+var JDATA=[
+  {n:"01",t:"Ambition",d:"A student arrives with an idea and the will to build it — but no capital, no network, no map."},
+  {n:"02",t:"Support",d:"Youth Accelerator provides an R&D grant, resources, and the scaffolding to turn an idea into a first version."},
+  {n:"03",t:"Matching",d:"The founder is matched to a mentor on a weighted formula — sector, goals, availability, and stage."},
+  {n:"04",t:"Growth",d:"With a mentor, a network, and resources, the founder ships, iterates, and compounds."},
+  {n:"05",t:"Network",d:"The founder becomes a node others connect to — the network grows denser with every venture."}
+];
+var SEEDS=[
+  {id:"mentor_amit",name:"Amit Chaturvedy",email:"amit@seventures.com",pwHash:"seeded",createdAt:"2025-01-01T00:00:00.000Z",role:"mentor",linkedin:"https://www.linkedin.com/in/amit-chaturvedy/",avatar:{initials:"AC",bg:"#0a1a2a",color:"#5bc8f5"},profile:{background:"Managing Partner & Global Head of SE Ventures, a \u20ac1B VC fund backed by Schneider Electric. Previously Global Head of venture investing at Cisco Investments.",sectors:["Climate & Energy","Hardware & Robotics","Software & AI"],strengths:["Fundraising & VC introductions","Early-stage strategy","Network & industry connections","Go-to-market & distribution"],avail:"med",xp:"exec",links:"https://www.linkedin.com/in/amit-chaturvedy/"}},
+  {id:"mentor_emma",name:"Emma McDonagh",email:"emma@overturevc.com",pwHash:"seeded",createdAt:"2025-01-01T00:00:00.000Z",role:"mentor",linkedin:"https://www.linkedin.com/in/emma-mcdonagh-976b65168/",avatar:{initials:"EM",bg:"#0a1820",color:"#5bc8f5"},profile:{background:"Principal at Overture Ventures, a climate-focused VC fund. Previously at Powerhouse, a clean energy and mobility innovation firm based in Oakland.",sectors:["Climate & Energy","Software & AI","Social Impact"],strengths:["Fundraising & VC introductions","Early-stage strategy","Go-to-market & distribution","Product & design feedback"],avail:"med",xp:"senior",links:"https://www.linkedin.com/in/emma-mcdonagh-976b65168/"}},
+  {id:"mentor_naomie",name:"Naomie Chien",email:"naochien@stanford.edu",pwHash:"seeded",createdAt:"2025-01-01T00:00:00.000Z",role:"mentor",linkedin:"https://www.linkedin.com/in/naomiechien/",avatar:{initials:"NC",bg:"#101428",color:"#5bc8f5"},profile:{background:"CS & Earth Systems undergrad at Stanford. Researcher at Prelude Ventures, Stanford Sustainable Investment Group. Focused on AI and climate tech.",sectors:["Software & AI","Climate & Energy","Education"],strengths:["Early-stage strategy","Technical / engineering","Product & design feedback","Network & industry connections"],avail:"high",xp:"early",links:"https://www.linkedin.com/in/naomiechien/"}}
+];
+
+var KU="ya:users:v4", KS="ya:sess:v4";
+var CU=null, SU=null, SS="account", AT="matches";
+var SF={venture:"",sectors:[],goals:[],avail:"med",stage:"idea",links:""};
+var SM={background:"",sectors:[],strengths:[],avail:"med",xp:"mid",links:""};
+var FS=0, MS=0;
+
+/* ─── DB HELPERS ─── */
+async function loadU() {
+  try {
+    var raw = await stGet(KU, true);
+    var u = raw ? JSON.parse(raw) : {};
+    var changed = false;
+    for (var i = 0; i < SEEDS.length; i++) {
+      if (!u[SEEDS[i].id]) { u[SEEDS[i].id] = SEEDS[i]; changed = true; }
+    }
+    if (changed) await saveU(u);
+    return u;
+  } catch(e) { return {}; }
+}
+async function saveU(u) { await stSet(KU, JSON.stringify(u), true); }
+async function loadSess() {
+  try { var r = await stGet(KS, false); return r ? JSON.parse(r) : null; }
+  catch(e) { return null; }
+}
+async function saveSess(id) {
+  if (id) await stSet(KS, JSON.stringify({uid:id}), false);
+  else await stDel(KS, false);
+}
+
+/* ─── UTILS ─── */
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function hashPw(pw){var h=0;for(var i=0;i<pw.length;i++)h=(Math.imul(31,h)+pw.charCodeAt(i))|0;return h.toString(16)}
+function pct(n){return Math.round(n*100)+"%"}
+function setPage(id){["ph","pl","ps","pa"].forEach(function(x){document.getElementById(x).classList.remove("v")});document.getElementById(id).classList.add("v")}
+function showErr(id,msg){var el=document.getElementById(id);if(!el)return;el.textContent=msg;if(msg)el.classList.add("show");else el.classList.remove("show")}
+function goHome(){if(!CU)setPage("ph")}
+function findLabel(arr,id,key){for(var i=0;i<arr.length;i++){if(arr[i].id===id)return arr[i][key]||""}return ""}
+
+/* ─── NAV ─── */
+function renderNav(){
+  var nr=document.getElementById("navr"), nl=document.getElementById("nav-links");
+  if(CU){
+    nl.innerHTML='';
+    nr.innerHTML='<button class="bg sm'+(AT==="profile"?" on":"")+'" onclick="switchTab(\'profile\')">Profile</button>'
+      +' <button class="bg sm'+(AT==="matches"?" on":"")+'" onclick="switchTab(\'matches\')" style="margin:0 6px">Matches</button>'
+      +' <button class="bg sm" onclick="doLogout()">Log out</button>';
+  } else {
+    nl.innerHTML='<a href="#model">Model</a><a href="#journey">Journey</a><a href="#network">Network</a><a href="#events">Events</a><a href="#apply">Apply</a>';
+    nr.innerHTML='<button class="bp sm" onclick="document.getElementById(\'apply\').scrollIntoView({behavior:\'smooth\'})">Apply now</button>';
+  }
+}
+function handleApply(e){
+  e.preventDefault();
+  var form=e.target;
+  var data=new FormData(form);
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(data).toString()})
+  .then(function(){
+    document.getElementById('apply-form-wrap').style.display='none';
+    document.getElementById('apply-success').style.display='block';
+  })
+  .catch(function(){
+    document.getElementById('apply-form-wrap').style.display='none';
+    document.getElementById('apply-success').style.display='block';
+  });
+}
+function switchApplyTab(t){
+  var isFounder=t==='founder';
+  document.getElementById('form-founder').style.display=isFounder?'block':'none';
+  document.getElementById('form-mentor').style.display=isFounder?'none':'block';
+  document.getElementById('tab-founder').style.background=isFounder?'var(--blue)':'transparent';
+  document.getElementById('tab-founder').style.color=isFounder?'#060a0f':'var(--mu)';
+  document.getElementById('tab-founder').style.border=isFounder?'none':'1px solid var(--bd)';
+  document.getElementById('tab-mentor').style.background=isFounder?'transparent':'var(--blue)';
+  document.getElementById('tab-mentor').style.color=isFounder?'var(--mu)':'#060a0f';
+  document.getElementById('tab-mentor').style.border=isFounder?'1px solid var(--bd)':'none';
+}
+function handleFormSuccess(e,successId,wrapId){
+  e.preventDefault();
+  var form=e.target;
+  fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}})
+  .then(function(r){
+    document.getElementById(wrapId).style.display='none';
+    document.getElementById(successId).style.display='block';
+  }).catch(function(){
+    document.getElementById(wrapId).style.display='none';
+    document.getElementById(successId).style.display='block';
+  });
+}
+(function(){
+  var deadline=new Date('2026-08-31T23:59:59');
+  function tick(){
+    var now=new Date(),diff=deadline-now;
+    if(diff<=0){document.getElementById('countdown').textContent='Applications closed';return;}
+    var d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000);
+    document.getElementById('countdown').textContent=d+'d '+h+'h '+m+'m remaining';
+    setTimeout(tick,60000);
+  }
+  tick();
+})();
+
+function showSignup(){SS="account";SU=null;SF={venture:"",sectors:[],goals:[],avail:"med",stage:"idea",links:""};SM={background:"",sectors:[],strengths:[],avail:"med",xp:"mid",links:""};FS=0;MS=0;renderS();setPage("ps")}
+function switchTab(t){AT=t;renderNav();renderApp()}
+
+/* ─── JOURNEY ─── */
+function setJStep(i){
+  document.querySelectorAll(".jstep").forEach(function(s,j){s.classList.toggle("active",j===i)});
+  document.getElementById("jcard-n").textContent=JDATA[i].n;
+  document.getElementById("jcard-t").textContent=JDATA[i].t;
+  document.getElementById("jcard-d").textContent=JDATA[i].d;
+}
+
+/* ─── LOGIN ─── */
+async function doLogin(){
+  var email=document.getElementById("le").value.trim().toLowerCase();
+  var pw=document.getElementById("lp").value;
+  if(!email||!pw)return showErr("lerr","Fill in both fields.");
+  var btn=document.getElementById("lbtn");btn.disabled=true;btn.textContent="Logging in...";
+  try{
+    var users=await loadU(),u=null,ks=Object.keys(users);
+    for(var i=0;i<ks.length;i++){if(users[ks[i]].email===email){u=users[ks[i]];break}}
+    if(!u||u.pwHash!==hashPw(pw))return showErr("lerr","Wrong email or password.");
+    await saveSess(u.id);CU=u;AT="matches";renderNav();renderApp();setPage("pa");showErr("lerr","");
+  }catch(e){showErr("lerr",e.message);}
+  finally{btn.disabled=false;btn.textContent="Log in \u2192"}
+}
+async function doLogout(){await saveSess(null);CU=null;renderNav();setPage("ph")}
+
+/* ─── FORM HELPERS ─── */
+function pbHTML(cur,tot){var h='<div class="pb">';for(var i=0;i<tot;i++)h+='<div class="ps'+(i<=cur?" d":"")+'"></div>';return h+'</div>'}
+function chipsHTML(items,sel,fn){
+  var h='<div class="chips">';
+  for(var i=0;i<items.length;i++){
+    var on=sel.indexOf(items[i])>=0;
+    h+='<button type="button" class="chip'+(on?" on":"")+'" onclick="'+fn+'(this,\''+items[i].replace(/\\/g,"\\\\").replace(/'/g,"\\'")+'\')">'+(esc(items[i]))+'</button>';
+  }
+  return h+'</div>';
+}
+function rcHTML(opts,sel,fn){
+  var h="";
+  for(var i=0;i<opts.length;i++){
+    var o=opts[i];
+    h+='<button type="button" class="rc'+(sel===o.id?" on":"")+'" onclick="'+fn+'(this,\''+o.id+'\')">'
+      +'<div class="rct">'+esc(o.lb)+'</div>'+(o.ds?'<div class="rcd">'+esc(o.ds)+'</div>':'')+'</button>';
+  }
+  return h;
+}
+
+/* ─── SIGNUP ─── */
+function renderS(){
+  var el=document.getElementById("sc");
+  if(SS==="account")el.innerHTML=stepAccHTML();
+  else if(SS==="role")el.innerHTML=stepRoleHTML();
+  else if(SU&&SU.role==="founder")el.innerHTML=founderHTML();
+  else if(SU&&SU.role==="mentor")el.innerHTML=mentorHTML();
+}
+function stepAccHTML(){
+  return '<span class="stag">Step 1 of 3</span>'+pbHTML(0,3)
+    +'<h2 class="ch">Create your account.</h2><p class="cs">Your login details. Profile comes next.</p>'
+    +'<div class="g2">'
+    +'<label><span class="lbl">Full name</span><input type="text" id="sn" placeholder="Alex Rivera"/></label>'
+    +'<label><span class="lbl">Email</span><input type="email" id="se" placeholder="alex@school.edu"/></label>'
+    +'<label><span class="lbl">Password</span><input type="password" id="sp" placeholder="Min. 6 characters"/></label>'
+    +'<label><span class="lbl">Confirm password</span><input type="password" id="sp2" placeholder="Repeat password"/></label>'
+    +'</div><div class="err" id="saerr"></div>'
+    +'<div class="fnav"><button class="bg" onclick="setPage(\'ph\')">Cancel</button>'
+    +'<button class="bp" id="sabtn" onclick="submitAcc()">Create account &#8594;</button></div>';
+}
+async function submitAcc(){
+  var name=document.getElementById("sn").value.trim();
+  var email=document.getElementById("se").value.trim().toLowerCase();
+  var pw=document.getElementById("sp").value;
+  var pw2=document.getElementById("sp2").value;
+  if(!name)return showErr("saerr","Name required.");
+  if(!/\S+@\S+\.\S+/.test(email))return showErr("saerr","Valid email required.");
+  if(pw.length<6)return showErr("saerr","Password must be at least 6 characters.");
+  if(pw!==pw2)return showErr("saerr","Passwords don't match.");
+  var btn=document.getElementById("sabtn");btn.disabled=true;btn.textContent="Creating...";
+  try{
+    var users=await loadU(), ks=Object.keys(users);
+    for(var i=0;i<ks.length;i++){if(users[ks[i]].email===email)return showErr("saerr","Email already registered. Log in instead.")}
+    var id=uid();
+    users[id]={id:id,name:name,email:email,pwHash:hashPw(pw),createdAt:new Date().toISOString(),role:null,profile:null};
+    await saveU(users);
+    await saveSess(id);
+    SU=users[id];SS="role";renderS();
+  }catch(e){showErr("saerr",e.message);}
+  finally{btn.disabled=false;btn.textContent="Create account \u2192"}
+}
+function stepRoleHTML(){
+  var fr=SU&&SU.role==="founder",mr=SU&&SU.role==="mentor";
+  return '<span class="stag">Step 2 of 3</span>'+pbHTML(1,3)
+    +'<h2 class="ch">Who are you?</h2><p class="cs">This determines your form and how you get matched.</p>'
+    +'<button type="button" class="rc'+(fr?" on":"")+'" onclick="pickRole(this,\'founder\')">'
+    +'<div class="rct">I\'m a founder</div><div class="rcd">I have an idea or early-stage venture. Looking for a mentor.</div></button>'
+    +'<button type="button" class="rc'+(mr?" on":"")+'" onclick="pickRole(this,\'mentor\')">'
+    +'<div class="rct">I\'m a mentor</div><div class="rcd">I\'ve built things and want to help the next generation of founders.</div></button>'
+    +'<div class="fnav"><button class="bg" onclick="SS=\'account\';renderS()">Back</button>'
+    +'<button class="bp" id="rbtn" onclick="submitRole()"'+(SU&&SU.role?"":' disabled style="opacity:.4"')+'>Continue &#8594;</button></div>';
+}
+function pickRole(el,role){
+  document.querySelectorAll("#sc .rc").forEach(function(b){b.classList.remove("on")});
+  el.classList.add("on");SU.role=role;
+  var btn=document.getElementById("rbtn");if(btn){btn.disabled=false;btn.style.opacity=1}
+}
+async function submitRole(){
+  if(!SU||!SU.role)return;
+  var users=await loadU();users[SU.id].role=SU.role;await saveU(users);
+  SS="profile";FS=0;MS=0;renderS();
+}
+
+/* ─── FOUNDER FORM ─── */
+var FSTEPS=["Your venture","Your sector","What you need","Availability","Your stage"];
+var FWTS=[null,"51% of match","25% of match","16% of match","8% of match"];
+function founderHTML(){
+  var s=FS,body="";
+  if(s===0)body='<div class="g2"><label><span class="lbl">What are you building? (one line)</span><input type="text" id="fv" value="'+esc(SF.venture)+'" placeholder="e.g. AI-powered tutoring for rural schools" oninput="SF.venture=this.value"/></label><label><span class="lbl">LinkedIn / portfolio / pitch deck (optional)</span><input type="url" id="fl" value="'+esc(SF.links)+'" placeholder="https://..." oninput="SF.links=this.value"/></label></div>';
+  else if(s===1)body='<p style="color:var(--mu);font-size:13px;margin-bottom:12px">Pick the sectors your venture lives in.</p>'+chipsHTML(SECTORS,SF.sectors,"tFS");
+  else if(s===2)body='<p style="color:var(--mu);font-size:13px;margin-bottom:12px">What kind of help matters most right now?</p>'+chipsHTML(FGOALS,SF.goals,"tFG");
+  else if(s===3)body=rcHTML(AVAIL,SF.avail,"pFA");
+  else body='<p style="color:var(--mu);font-size:13px;margin-bottom:10px">Where are you in the build?</p>'+rcHTML(STAGES,SF.stage,"pFSt");
+  var wt=FWTS[s];
+  return '<span class="stag">Step 3 of 3 \u2014 Founder profile</span>'+pbHTML(s+1,FSTEPS.length+1)
+    +'<h2 class="ch" style="margin-bottom:4px">'+FSTEPS[s]+'.</h2>'
+    +(wt?'<div class="wt">'+wt+'</div>':'<div style="margin-bottom:14px"></div>')
+    +body+'<div class="err" id="ferr"></div>'
+    +'<div class="fnav"><button class="bg" onclick="prevF()">Back</button><span class="sc">'+(s+1)+' / '+FSTEPS.length+'</span>'
+    +'<button class="bp" id="fnxt" onclick="nextF()">'+(s===FSTEPS.length-1?"Save profile &#8594;":"Continue &#8594;")+'</button></div>';
+}
+function tFS(el,v){var i=SF.sectors.indexOf(v);if(i>=0)SF.sectors.splice(i,1);else SF.sectors.push(v);el.classList.toggle("on")}
+function tFG(el,v){var i=SF.goals.indexOf(v);if(i>=0)SF.goals.splice(i,1);else SF.goals.push(v);el.classList.toggle("on")}
+function pFA(el,v){SF.avail=v;document.querySelectorAll("#sc .rc").forEach(function(b){b.classList.remove("on")});el.classList.add("on")}
+function pFSt(el,v){SF.stage=v;document.querySelectorAll("#sc .rc").forEach(function(b){b.classList.remove("on")});el.classList.add("on")}
+function prevF(){if(FS>0){FS--;renderS();}else{SS="role";renderS();}}
+async function nextF(){
+  if(FS===0&&SF.venture.trim().length<2)return showErr("ferr","Describe your venture.");
+  if(FS===1&&SF.sectors.length===0)return showErr("ferr","Pick at least one sector.");
+  if(FS===2&&SF.goals.length===0)return showErr("ferr","Pick at least one goal.");
+  if(FS<FSTEPS.length-1){FS++;renderS();return;}
+  var btn=document.getElementById("fnxt");btn.disabled=true;btn.textContent="Saving...";
+  try{
+    var users=await loadU();users[SU.id].profile=SF;await saveU(users);
+    CU={id:SU.id,name:SU.name,email:SU.email,role:SU.role,profile:SF};
+    AT="matches";renderNav();renderApp();setPage("pa");
+  }catch(e){btn.disabled=false;btn.textContent="Save profile \u2192";showErr("ferr",e.message);}
+}
+
+/* ─── MENTOR FORM ─── */
+var MSTEPS=["Your background","Sectors you've worked in","Where you add value","Time you can give","Your experience level"];
+var MWTS=[null,"51% of match","25% of match","16% of match","8% of match"];
+function mentorHTML(){
+  var s=MS,body="";
+  if(s===0)body='<div class="g2"><label><span class="lbl">What have you built or worked on? (one line)</span><input type="text" id="mb" value="'+esc(SM.background)+'" placeholder="e.g. Ex-CTO at Series-A fintech, now advising founders" oninput="SM.background=this.value"/></label><label><span class="lbl">LinkedIn / portfolio (optional)</span><input type="url" id="ml" value="'+esc(SM.links)+'" placeholder="https://linkedin.com/in/..." oninput="SM.links=this.value"/></label></div>';
+  else if(s===1)body='<p style="color:var(--mu);font-size:13px;margin-bottom:12px">Which industries have you actually worked in?</p>'+chipsHTML(SECTORS,SM.sectors,"tMS");
+  else if(s===2)body='<p style="color:var(--mu);font-size:13px;margin-bottom:12px">What can you genuinely help a founder with?</p>'+chipsHTML(MSTR,SM.strengths,"tMSt");
+  else if(s===3)body=rcHTML(AVAIL,SM.avail,"pMA");
+  else body='<p style="color:var(--mu);font-size:13px;margin-bottom:10px">Used to match you to founders at the right stage.</p>'+rcHTML(XP,SM.xp,"pMX");
+  var wt=MWTS[s];
+  return '<span class="stag">Step 3 of 3 \u2014 Mentor profile</span>'+pbHTML(s+1,MSTEPS.length+1)
+    +'<h2 class="ch" style="margin-bottom:4px">'+MSTEPS[s]+'.</h2>'
+    +(wt?'<div class="wt">'+wt+'</div>':'<div style="margin-bottom:14px"></div>')
+    +body+'<div class="err" id="merr"></div>'
+    +'<div class="fnav"><button class="bg" onclick="prevM()">Back</button><span class="sc">'+(s+1)+' / '+MSTEPS.length+'</span>'
+    +'<button class="bp" id="mnxt" onclick="nextM()">'+(s===MSTEPS.length-1?"Save profile &#8594;":"Continue &#8594;")+'</button></div>';
+}
+function tMS(el,v){var i=SM.sectors.indexOf(v);if(i>=0)SM.sectors.splice(i,1);else SM.sectors.push(v);el.classList.toggle("on")}
+function tMSt(el,v){var i=SM.strengths.indexOf(v);if(i>=0)SM.strengths.splice(i,1);else SM.strengths.push(v);el.classList.toggle("on")}
+function pMA(el,v){SM.avail=v;document.querySelectorAll("#sc .rc").forEach(function(b){b.classList.remove("on")});el.classList.add("on")}
+function pMX(el,v){SM.xp=v;document.querySelectorAll("#sc .rc").forEach(function(b){b.classList.remove("on")});el.classList.add("on")}
+function prevM(){if(MS>0){MS--;renderS();}else{SS="role";renderS();}}
+async function nextM(){
+  if(MS===0&&SM.background.trim().length<2)return showErr("merr","Describe your background.");
+  if(MS===1&&SM.sectors.length===0)return showErr("merr","Pick at least one sector.");
+  if(MS===2&&SM.strengths.length===0)return showErr("merr","Pick at least one strength.");
+  if(MS<MSTEPS.length-1){MS++;renderS();return;}
+  var btn=document.getElementById("mnxt");btn.disabled=true;btn.textContent="Saving...";
+  try{
+    var users=await loadU();users[SU.id].profile=SM;await saveU(users);
+    CU={id:SU.id,name:SU.name,email:SU.email,role:SU.role,profile:SM};
+    AT="matches";renderNav();renderApp();setPage("pa");
+  }catch(e){btn.disabled=false;btn.textContent="Save profile \u2192";showErr("merr",e.message);}
+}
+
+/* ─── MATCHING ─── */
+function jaccard(a,b){var map={},inter=0,union=a.length;for(var i=0;i<a.length;i++)map[a[i]]=1;for(var j=0;j<b.length;j++){if(map[b[j]])inter++;else union++;}return union===0?0:inter/union}
+function scoreMatch(founder,mentor){
+  var domain=jaccard(founder.profile.sectors||[],mentor.profile.sectors||[]);
+  var goals=jaccard(founder.profile.goals||[],mentor.profile.strengths||[]);
+  var ord={low:0,med:1,high:2},diff=Math.abs((ord[founder.profile.avail]||1)-(ord[mentor.profile.avail]||1));
+  var avail=diff===0?1:diff===1?0.5:0;
+  var mxi=0;for(var i=0;i<XP.length;i++){if(XP[i].id===mentor.profile.xp){mxi=i;break}}
+  var fsi=0;for(var j=0;j<STAGES.length;j++){if(STAGES[j].id===founder.profile.stage){fsi=STAGES[j].n;break}}
+  var sr=Math.min(mxi/3,1),stage=sr>=fsi/3?sr:Math.max(0,sr-.2);
+  return {total:.51*domain+.25*goals+.16*avail+.08*stage,domain:domain,goals:goals,avail:avail,stage:stage};
+}
+
+/* ─── CLAUDE BLURB ─── */
+async function getBlurb(founder,mentor,sc){
+  var prompt="You are a warm program coordinator at Youth Accelerator.\nWrite a 3-sentence match note to the founder (use first name). Be specific. No fluff.\n\nFOUNDER: "+founder.name+", building: "+(founder.profile.venture||"not specified")+"\nSectors: "+(founder.profile.sectors||[]).join(", ")+"\nNeeds: "+(founder.profile.goals||[]).join(", ")+"\n\nMENTOR: "+mentor.name+", background: "+(mentor.profile.background||"not specified")+"\nSectors: "+(mentor.profile.sectors||[]).join(", ")+"\nCan help with: "+(mentor.profile.strengths||[]).join(", ")+"\n\nSCORE: "+pct(sc.total)+"\n\nPlain text only.";
+  var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:300,messages:[{role:"user",content:prompt}]})});
+  if(!res.ok)throw new Error("API "+res.status);
+  var d=await res.json(),txt="",blocks=d.content||[];
+  for(var i=0;i<blocks.length;i++){if(blocks[i].type==="text")txt+=blocks[i].text}
+  return txt.trim();
+}
+
+/* ─── APP ─── */
+function renderApp(){
+  var el=document.getElementById("ac");if(!CU)return;
+  if(AT==="profile"){el.innerHTML=profileHTML();return;}
+  el.innerHTML='<div style="padding:60px 0;text-align:center;color:var(--di)">Loading matches...</div>';
+  loadMatches();
+}
+function profileHTML(){
+  var u=CU,p=u.profile,isF=u.role==="founder",rows=[];
+  if(isF){rows=[["Venture",p.venture||""],["Sectors",(p.sectors||[]).join(", ")],["Needs",(p.goals||[]).join(", ")],["Availability",findLabel(AVAIL,p.avail,"lb")],["Stage",findLabel(STAGES,p.stage,"lb")]];if(p.links)rows.push(["Links",p.links]);}
+  else{rows=[["Background",p.background||""],["Sectors",(p.sectors||[]).join(", ")],["Strengths",(p.strengths||[]).join(", ")],["Availability",findLabel(AVAIL,p.avail,"lb")],["Experience",findLabel(XP,p.xp,"lb")]];if(p.links)rows.push(["Links",p.links]);}
+  var h='<span class="stag">'+(isF?"Founder":"Mentor")+' profile</span>'
+    +'<h2 class="ch" style="font-size:28px;margin-bottom:6px">'+esc(u.name)+'</h2>'
+    +'<p style="color:var(--di);font-size:12.5px;margin-bottom:24px">'+esc(u.email)+'</p><div class="pgrid">';
+  for(var i=0;i<rows.length;i++)h+='<div class="prow"><span class="pk">'+rows[i][0]+'</span><span class="pv">'+esc(rows[i][1]||"--")+'</span></div>';
+  return h+'</div>';
+}
+async function loadMatches(){
+  var users=await loadU(),all=[],ks=Object.keys(users);
+  for(var i=0;i<ks.length;i++){if(users[ks[i]].profile)all.push(users[ks[i]])}
+  var scored=[];
+  if(CU.role==="founder"){for(var j=0;j<all.length;j++){if(all[j].role==="mentor")scored.push({u:all[j],s:scoreMatch(CU,all[j])})}}
+  else{for(var k=0;k<all.length;k++){if(all[k].role==="founder")scored.push({u:all[k],s:scoreMatch(all[k],CU)})}}
+  scored.sort(function(a,b){return b.s.total-a.s.total});
+  var el=document.getElementById("ac");
+  if(scored.length===0){
+    el.innerHTML='<div style="padding:60px 0"><div style="font-family:DM Serif Display,serif;font-size:32px;font-weight:400;color:var(--fg);margin-bottom:12px">No matches yet.</div>'
+      +'<p style="color:var(--mu);font-size:14px">'+(CU.role==="founder"?"No mentors have signed up yet.":"No founders have signed up yet.")+'</p></div>';
+    return;
+  }
+  var h='<div style="margin-bottom:32px"><span class="stag">'+(CU.role==="founder"?"Mentor matches":"Founders in the network")+'</span>'
+    +'<div style="font-family:DM Serif Display,serif;font-weight:400;font-size:clamp(28px,4vw,44px);color:var(--fg);margin-bottom:6px">'+scored.length+' match'+(scored.length!==1?"es":"")+" ranked by fit.</div>"
+    +'<p style="color:var(--mu);font-size:13px">51% domain &middot; 25% goals &middot; 16% availability &middot; 8% stage</p></div>';
+  for(var m=0;m<scored.length;m++){
+    var item=scored[m],isTop=m===0;
+    var bio=item.u.role==="mentor"?(item.u.profile.background||""):(item.u.profile.venture||"");
+    var secs=(item.u.profile.sectors||[]).slice(0,3).join(" \u00b7 ");
+    var av=item.u.avatar;
+    var avHTML=av?'<div style="width:48px;height:48px;border-radius:10px;background:'+av.bg+';border:1.5px solid '+av.color+';display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:'+av.color+';flex-shrink:0;margin-bottom:10px;font-family:Syne,sans-serif">'+av.initials+'</div>':'';
+    var liHTML=item.u.linkedin?'<a href="'+esc(item.u.linkedin)+'" target="_blank" rel="noopener" style="color:var(--blue);font-size:11.5px;text-decoration:none;margin-top:5px;display:inline-block">&#8599; LinkedIn</a>':'';
+    h+='<div class="mc'+(isTop?" top":"")+'">'
+      +'<div class="mtr"><div style="display:flex;flex-direction:column">'+avHTML
+      +'<div class="mn">'+esc(item.u.name)+'</div>'
+      +(secs?'<div class="ms">'+esc(secs)+'</div>':'')
+      +(bio?'<div class="mb2">'+esc(bio)+'</div>':'')+liHTML+'</div>'
+      +'<div><div class="mpct">'+pct(item.s.total)+'</div>'+(isTop?'<div class="topt">Top match</div>':'')+'</div></div>'
+      +'<div class="sbars">'
+      +'<div class="srow"><span class="sl">Domain (51%)</span><div class="bt"><div class="bf" style="width:'+Math.round(item.s.domain*100)+'%"></div></div><span class="sv">'+pct(item.s.domain)+'</span></div>'
+      +'<div class="srow"><span class="sl">Goals (25%)</span><div class="bt"><div class="bf" style="width:'+Math.round(item.s.goals*100)+'%"></div></div><span class="sv">'+pct(item.s.goals)+'</span></div>'
+      +'<div class="srow"><span class="sl">Avail. (16%)</span><div class="bt"><div class="bf" style="width:'+Math.round(item.s.avail*100)+'%"></div></div><span class="sv">'+pct(item.s.avail)+'</span></div>'
+      +'<div class="srow"><span class="sl">Stage (8%)</span><div class="bt"><div class="bf" style="width:'+Math.round(item.s.stage*100)+'%"></div></div><span class="sv">'+pct(item.s.stage)+'</span></div>'
+      +'</div>'
+      +(CU.role==="founder"?'<div id="bl'+m+'"><button class="bgen" onclick="fetchBlurb('+m+',\''+item.u.id+'\')">Generate match note &#8594;</button></div>':"")
+      +'</div>';
+  }
+  el.innerHTML=h;
+  if(CU.role==="founder"&&scored.length>0){
+    var top=scored[0],topId=top.u.id,topScore=top.s;
+    var bel=document.getElementById("bl0");
+    if(bel)bel.innerHTML='<div class="bload">Generating match note...</div>';
+    getBlurb(CU,top.u,topScore)
+      .then(function(blurb){var b=document.getElementById("bl0");if(b)b.innerHTML='<div class="blurb">'+esc(blurb)+'</div>';})
+      .catch(function(){var b=document.getElementById("bl0");if(b)b.innerHTML='<button class="bgen" onclick="fetchBlurb(0,\''+topId+'\')">Generate match note &#8594;</button>';});
+  }
+}
+async function fetchBlurb(idx,mid){
+  var users=await loadU(),mentor=users[mid];if(!mentor)return;
+  var el=document.getElementById("bl"+idx);if(el)el.innerHTML='<div class="bload">Generating...</div>';
+  try{
+    var blurb=await getBlurb(CU,mentor,scoreMatch(CU,mentor));
+    var el2=document.getElementById("bl"+idx);if(el2)el2.innerHTML='<div class="blurb">'+esc(blurb)+'</div>';
+  }catch(e){
+    var el3=document.getElementById("bl"+idx);if(el3)el3.innerHTML='<button class="bgen" onclick="fetchBlurb('+idx+',\''+mid+'\')">Try again &#8594;</button>';
+  }
+}
+
+/* ─── CONSTELLATION BACKGROUND ─── */
+(function(){
+  var c=document.getElementById("cv"),ctx=c.getContext("2d"),w,h;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var mx=-9999,my=-9999;
+  var CONNECT_CURSOR=100; // cursor attracts connections within this radius
+
+  // Constellation groups: clusters of stars with pre-defined edges
+  var stars=[], edges=[];
+
+  function resize(){
+    w=window.innerWidth;h=window.innerHeight;
+    c.width=w*dpr;c.height=h*dpr;
+    c.style.width=w+"px";c.style.height=h+"px";
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    buildConstellations();
+  }
+
+  function buildConstellations(){
+    stars=[];edges=[];
+    var N=Math.min(70,Math.floor(w*h/10000));
+    for(var i=0;i<N;i++){
+      stars.push({
+        x:Math.random()*w, y:Math.random()*h,
+        vx:(Math.random()-.5)*.06, vy:(Math.random()-.5)*.06,
+        r:Math.random()*1.1+.3,
+        twinkle:Math.random()*Math.PI*2,
+        twinkleSpeed:0.02+Math.random()*0.03
+      });
+    }
+    // Connect nearby stars as constellation lines
+    for(var i=0;i<stars.length;i++){
+      var closest=[];
+      for(var j=0;j<stars.length;j++){
+        if(i===j)continue;
+        var dx=stars[i].x-stars[j].x,dy=stars[i].y-stars[j].y;
+        var d=Math.sqrt(dx*dx+dy*dy);
+        if(d<160)closest.push({j:j,d:d});
+      }
+      closest.sort(function(a,b){return a.d-b.d});
+      var maxLinks=Math.floor(Math.random()*2)+1;
+      for(var k=0;k<Math.min(maxLinks,closest.length);k++){
+        var key=Math.min(i,closest[k].j)+"-"+Math.max(i,closest[k].j);
+        if(!edges[key])edges.push({a:i,b:closest[k].j,key:key});
+        edges[key]=true;
+      }
+    }
+  }
+
+  document.addEventListener("mousemove",function(e){mx=e.clientX;my=e.clientY;});
+  document.addEventListener("mouseleave",function(){mx=-9999;my=-9999;});
+
+  var t=0;
+  function draw(){
+    t++;
+    ctx.clearRect(0,0,w,h);
+
+    // Move stars
+    for(var i=0;i<stars.length;i++){
+      var s=stars[i];
+      s.x+=s.vx;s.y+=s.vy;
+      if(s.x<-10)s.x=w+10;if(s.x>w+10)s.x=-10;
+      if(s.y<-10)s.y=h+10;if(s.y>h+10)s.y=-10;
+      s.twinkle+=s.twinkleSpeed;
+    }
+
+    // Draw constellation edges
+    for(var e=0;e<edges.length;e++){
+      var ea=edges[e];if(!ea.a&&ea.a!==0)continue;
+      var sa=stars[ea.a],sb=stars[ea.b];
+      ctx.beginPath();ctx.moveTo(sa.x,sa.y);ctx.lineTo(sb.x,sb.y);
+      ctx.strokeStyle="rgba(91,200,245,0.06)";ctx.lineWidth=.5;ctx.stroke();
+    }
+
+    // Cursor-activated connections: swiftly connect nearby stars to cursor
+    if(mx>0&&mx<w){
+      var nearby=[];
+      for(var i=0;i<stars.length;i++){
+        var dx=stars[i].x-mx,dy=stars[i].y-my,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<CONNECT_CURSOR)nearby.push({idx:i,d:d});
+      }
+      nearby.sort(function(a,b){return a.d-b.d});
+      // Connect cursor to 4 closest
+      for(var k=0;k<Math.min(4,nearby.length);k++){
+        var s=stars[nearby[k].idx];
+        var alpha=(1-nearby[k].d/CONNECT_CURSOR)*0.5;
+        ctx.beginPath();ctx.moveTo(mx,my);ctx.lineTo(s.x,s.y);
+        ctx.strokeStyle="rgba(91,200,245,"+alpha+")";
+        ctx.lineWidth=.8;ctx.stroke();
+      }
+      // Connect the nearby stars to each other
+      for(var i=0;i<Math.min(4,nearby.length);i++){
+        for(var j=i+1;j<Math.min(4,nearby.length);j++){
+          var sa=stars[nearby[i].idx],sb=stars[nearby[j].idx];
+          var avgD=(nearby[i].d+nearby[j].d)/2;
+          var alpha=(1-avgD/CONNECT_CURSOR)*0.3;
+          ctx.beginPath();ctx.moveTo(sa.x,sa.y);ctx.lineTo(sb.x,sb.y);
+          ctx.strokeStyle="rgba(91,200,245,"+alpha+")";
+          ctx.lineWidth=.6;ctx.stroke();
+        }
+      }
+    }
+
+    // Draw stars with twinkle
+    for(var i=0;i<stars.length;i++){
+      var s=stars[i];
+      var tw=0.4+Math.sin(s.twinkle)*0.35;
+      var dx=s.x-mx,dy=s.y-my,d=Math.sqrt(dx*dx+dy*dy);
+      var nearCursor=d<CONNECT_CURSOR;
+      var alpha=nearCursor?Math.min(1,tw+0.4):tw*0.5;
+      var r=nearCursor?s.r*1.5:s.r;
+
+      if(nearCursor){
+        // Soft glow around star near cursor
+        var grd=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,r*5);
+        grd.addColorStop(0,"rgba(91,200,245,0.25)");
+        grd.addColorStop(1,"rgba(91,200,245,0)");
+        ctx.beginPath();ctx.arc(s.x,s.y,r*5,0,Math.PI*2);
+        ctx.fillStyle=grd;ctx.fill();
+      }
+
+      ctx.beginPath();ctx.arc(s.x,s.y,r,0,Math.PI*2);
+      ctx.fillStyle="rgba(91,200,245,"+alpha+")";ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+  resize();
+  draw();
+  window.addEventListener("resize",resize);
+})();
+
+/* ─── NETWORK CANVAS ─── */
+(function(){
+  var el=document.getElementById("nc");if(!el)return;
+  var ctx=el.getContext("2d"),W=700,H=360;
+  el.width=W;el.height=H;
+  var hub={x:W/2,y:H/2,r:18,color:"#5bc8f5"};
+  var nodes=[
+    {x:200,y:110,r:9,color:"#3a9abf",label:"Founder"},{x:480,y:90,r:9,color:"#3a9abf",label:"Founder"},
+    {x:120,y:240,r:9,color:"#3a9abf",label:"Founder"},{x:580,y:210,r:9,color:"#3a9abf",label:"Founder"},
+    {x:300,y:310,r:9,color:"#3a9abf",label:"Founder"},{x:550,y:320,r:9,color:"#3a9abf",label:"Founder"},
+    {x:160,y:170,r:7,color:"#e8f4fd",label:"Mentor"},{x:430,y:270,r:7,color:"#e8f4fd",label:"Mentor"},
+    {x:620,y:140,r:7,color:"#e8f4fd",label:"Mentor"}
+  ];
+  var mouse={x:-999,y:-999};
+  el.addEventListener("mousemove",function(e){var r=el.getBoundingClientRect(),sx=W/r.width;mouse.x=(e.clientX-r.left)*sx;mouse.y=(e.clientY-r.top)*sx;});
+  el.addEventListener("mouseleave",function(){mouse.x=-999;mouse.y=-999;});
+  function dist(a,b){return Math.sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y))}
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    var hov=dist(hub,mouse)<hub.r+12;
+    var hovN=-1;for(var i=0;i<nodes.length;i++){if(dist(nodes[i],mouse)<nodes[i].r+10){hovN=i;break;}}
+    var anyHov=hov||hovN>=0;
+    for(var i=0;i<nodes.length;i++){
+      var active=!anyHov||hovN===i||hov;
+      ctx.beginPath();ctx.moveTo(hub.x,hub.y);ctx.lineTo(nodes[i].x,nodes[i].y);
+      ctx.strokeStyle=active?"rgba(91,200,245,0.22)":"rgba(91,200,245,0.05)";ctx.lineWidth=active?1.2:.5;ctx.stroke();
+    }
+    for(var i=0;i<nodes.length;i++){
+      var n=nodes[i],isH=hovN===i,active=!anyHov||isH||hov,r=isH?n.r+4:n.r;
+      ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
+      ctx.globalAlpha=active?1:.3;ctx.fillStyle=n.color;ctx.fill();ctx.globalAlpha=1;
+      if(isH){ctx.beginPath();ctx.arc(n.x,n.y,r+6,0,Math.PI*2);ctx.strokeStyle=n.color;ctx.lineWidth=1;ctx.globalAlpha=.3;ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle=n.color;ctx.font="11px 'DM Sans',sans-serif";ctx.fillText(n.label,n.x+r+8,n.y+4);}
+    }
+    var hr=hov?hub.r+5:hub.r;
+    ctx.beginPath();ctx.arc(hub.x,hub.y,hr,0,Math.PI*2);
+    ctx.shadowColor=hub.color;ctx.shadowBlur=hov?28:16;ctx.fillStyle=hub.color;ctx.fill();ctx.shadowBlur=0;
+    if(hov){ctx.fillStyle="#060a0f";ctx.font="bold 10px 'Syne',sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("YA",hub.x,hub.y);ctx.textAlign="left";ctx.textBaseline="alphabetic";}
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ─── INIT ─── */
+(async function(){
+  try{
+    var sess=await loadSess();
+    if(sess){
+      var users=await loadU(),u=users[sess.uid];
+      if(u&&u.profile){CU=u;AT="matches";renderNav();renderApp();setPage("pa");return;}
+    }
+  }catch(e){}
+  renderNav();setPage("ph");
+})();
+</script>
+</body>
+</html>
